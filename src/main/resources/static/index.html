@@ -1,13 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta property="og:title" content="Ean's Blog">
-    <meta property="og:description" content="항해 과제 제출용 블로그">
-    <meta property="og:image" content="images/og_selectshop.png">
-    <title>Title</title>
-</head>
-<body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>HangHae99 - Week03 Project</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link href="css/styles.css" rel="stylesheet" />
+        <script>
+            $(document).ready(function () {
+                // HTML 문서를 로드할 때마다 실행합니다.
+                getMessages();
+            })
 
-</body>
+            // 메모를 불러와서 보여줍니다.
+            function getMessages() {
+                // 1. 기존 메모 내용을 지웁니다.
+                $("#post_container").html(`<h2 class="mb-5">Post</h2>`);
+                // 2. 메모 목록을 불러와서 HTML로 붙입니다.
+                $.ajax({
+                    type: "GET",
+                    url: "/api/posts",
+                    contentType: "application/json", // JSON 형식으로 전달함을 알리기
+                    data: {},
+                    success: function (responses) {
+                        for (let response of responses) {
+                            addHTML(response);
+                        }
+                    }
+                });
+            }
+
+            // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.
+            function addHTML(response) {
+                let temp = `
+
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                        <div class="flex-grow-1">
+                            <h3 class="mb-0">${response['title']}</h3>
+                            <div class="subheading mb-3">${response['name']}</div>
+                            <p>${response['message']}</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <span class="text-primary">${response['modifiedAt']}</span>
+                            <button class="btn btn-primary btn-xl text-uppercase text-white" onclick="editPost(${response['id']});" type="submit">Edit</button>
+                        </div>
+                    </div>
+
+                `
+                $("#post_container").append(temp);
+            }
+
+            // 메모를 생성합니다.
+            function writePost() {
+                let message = $("#message").val();
+                if (message == '') {
+                    alert('내용을 입력해주세요');
+                    return
+                }
+                let title = $("#title").val();
+                if (title == '') {
+                    alert('제목을 입력해주세요');
+                    return
+                }
+                let name =  $("#name").val();
+                if (name == '') {
+                    alert('이름을 입력해주세요');
+                    return
+                }
+                let pw =  $("#pw").val();
+                if (pw == '') {
+                    alert('비밀번호를 입력해주세요');
+                    return
+                }
+                let data = {'name': name, 'title': title, 'pw': pw, 'message': message};
+                $.ajax({
+                    type: "POST",
+                    url: "/api/posts",
+                    contentType: "application/json", // JSON 형식으로 전달함을 알리기
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        alert('메시지가 성공적으로 작성되었습니다.');
+                        window.location.reload();
+                    }
+                });
+
+                // 1. 작성한 메모를 불러옵니다.
+                // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+                // 3. genRandomName 함수를 통해 익명의 name을 만듭니다.
+                // 4. 전달할 data JSON으로 만듭니다.
+                // 5. POST /api/memos 에 data를 전달합니다.
+            }
+
+            // 메모를 수정합니다.
+            function submitEdit(id) {
+                // 1. 작성 대상 메모의 name과 message 를 확인합니다.
+                // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+                // 3. 전달할 data JSON으로 만듭니다.
+                // 4. PUT /api/memos/{id} 에 data를 전달합니다.
+            }
+
+            // 메모를 삭제합니다.
+            function deleteOne(id) {
+                // 1. DELETE /api/memos/{id} 에 요청해서 메모를 삭제합니다.
+            }
+
+        </script>
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">HangHae99 - Week03 Project</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="assets/img/profile.png" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#addPost">AddPost</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#post">Post</a></li>
+                </ul>
+            </div>
+        </nav>
+        <!-- Page Content-->
+        <div class="container-fluid p-0">
+            <!-- About-->
+            <section class="resume-section" id="about">
+                <div class="resume-section-content">
+                    <h1 class="mb-0">
+                        HangHae99
+                        <span class="text-primary">Week03 Project</span>
+                    </h1>
+                    <div class="subheading mb-5">
+                        <a href="mailto:name@email.com">https://hanghae99.spartacodingclub.kr/</a>
+                    </div>
+                    <p class="lead mb-5">This is the project week 3 task blog. Based on the spring boot, we created a REST API with CRUD function and used MYSQL using Lombok and JPA.</p>
+
+                </div>
+            </section>
+            <hr class="m-0" />
+<!--            AddPost-->
+            <section class="resume-section" id="addPost">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Add Post</h2>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                        <div class="col-md-6 p-2">
+                            <div class="form-group mb-2">
+                                <!-- Email address input-->
+                                <input class="form-control w-100 p-3" id="title" type="text" placeholder="Title *" data-sb-validations="required,title" data-sb-can-submit="no">
+                                <div class="invalid-feedback" data-sb-feedback="email:required">A title is required.</div>
+                                <div class="invalid-feedback" data-sb-feedback="email:email">Title is not valid.</div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <!-- Name input-->
+                                <input class="form-control w-100 p-3" id="name" type="text" placeholder="Your Name *" data-sb-validations="required" data-sb-can-submit="no">
+                                <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+                            </div>
+                            <div class="form-group mb-md-0">
+                                <!-- Phone number input-->
+                                <input class="form-control w-100 p-3" id="pw" type="password" placeholder="Your Password *" data-sb-validations="required" data-sb-can-submit="no">
+                                <div class="invalid-feedback" data-sb-feedback="pw:required">A password is required.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-2">
+                            <div class="form-group form-group-textarea mb-md-0 h-100 ">
+                                <!-- Message input-->
+                                <textarea class="form-control w-100 h-100 p-3" id="message" placeholder="Your Message *" data-sb-validations="required" data-sb-can-submit="no"></textarea>
+                                <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center"><button class="btn btn-primary btn-xl text-uppercase p-3 text-white" onclick="writePost();" type="submit">Add Post</button></div>
+                </div>
+            </section>
+            <hr class="m-0" />
+
+            <!-- Post-->
+            <section class="resume-section" id="post">
+
+                <div class="resume-section-content" id="post_container">
+
+
+
+
+                </div>
+            </section>
+            <hr class="m-0" />
+
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
 </html>
