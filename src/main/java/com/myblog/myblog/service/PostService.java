@@ -3,6 +3,7 @@ package com.myblog.myblog.service;
 import com.myblog.myblog.domain.Post;
 import com.myblog.myblog.domain.PostRepository;
 import com.myblog.myblog.domain.PostRequestDto;
+import com.myblog.myblog.domain.PostResponseDto;
 import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +17,20 @@ import java.util.Map;
 
 @Service
 public class PostService {
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Autowired
     public PostService(PostRepository postRepository) {
         this.postRepository=postRepository;
     }
-    public List<Post> readPosts() {
-        return postRepository.findAllByOrderByModifiedAtDesc();
+    public List<PostResponseDto> readPosts() {
+        return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
-    public PostRequestDto createPost(PostRequestDto postRequestDto) {
+    public PostResponseDto createPost(PostRequestDto postRequestDto) {
         Post post = new Post(postRequestDto);
-        postRequestDto = new PostRequestDto(postRepository.save(post));
-        return postRequestDto;
+        PostResponseDto postResponseDto = new PostResponseDto(postRepository.save(post));
+        return postResponseDto;
     }
 
     @Transactional

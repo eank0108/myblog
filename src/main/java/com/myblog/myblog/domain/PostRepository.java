@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findAllByOrderByModifiedAtDesc();
+    List<PostResponseDto> findAllByOrderByCreatedAtDesc();
 }
