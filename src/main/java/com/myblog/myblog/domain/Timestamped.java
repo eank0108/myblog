@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @MappedSuperclass // Entity가 자동으로 컬럼으로 인식합니다.
@@ -13,8 +14,8 @@ import java.time.LocalDateTime;
 public abstract class Timestamped {
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     @LastModifiedDate
-    private LocalDateTime modifiedAt;
+    private Timestamp modifiedAt;
 }

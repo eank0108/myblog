@@ -2,45 +2,62 @@ package com.myblog.myblog.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @NoArgsConstructor
-@Getter
 @Entity
+@Getter
+@Setter
+@ToString
 public class Post extends Timestamped {
-
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private Long id;
-
-    @Column(nullable = false)
+    @Column
     private String name;
-
-    @Column(nullable = false)
+    @Column
     private String title;
-
-//    @ColumnTransformer(
-//            read = "decrypt(pw)",
-//            write = "encrypt(nvl(?, 'null'))"
-//    )
-    @Column(nullable = false)
+    @Column
     private String pw;
-
-    @Column(nullable = false)
+    @Column
     private String message;
+//    @CreationTimestamp
+//    @Column
+//    private Timestamp createTime;
+//    @UpdateTimestamp
+//    @Column
+//    private Timestamp  updateTime;
 
-    public Post(PostRequestDto requestDto) {
-        this.name = requestDto.getName();
-        this.title = requestDto.getTitle();
-        this.pw = requestDto.getPw();
-        this.message = requestDto.getMessage();
+    public Post(PostRequestDto postRequestDto) {
+        this.name = postRequestDto.getName();
+        this.title = postRequestDto.getTitle();
+        this.pw = postRequestDto.getPw();
+        this.message = postRequestDto.getMessage();
     }
-    public void update(PostRequestDto requestDto) {
-        this.name = requestDto.getName();
-        this.title = requestDto.getTitle();
-        this.pw = requestDto.getPw();
-        this.message = requestDto.getMessage();
+    public void updatePost(Map<String,Object> map) {
+
+        for( String key : map.keySet() ){
+            if (key == "message") {
+                message = (String) map.get(key);
+            }
+            if (key == "title") {
+                title = (String) map.get(key);
+            }
+        }
+//        this.name = postRequestDto.getName();
+//        this.title = postRequestDto.getTitle();
+//        this.pw = postRequestDto.getPw();
+//        this.message = postRequestDto.getMessage();
     }
 
 }

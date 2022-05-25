@@ -5,27 +5,45 @@ import com.myblog.myblog.domain.PostRepository;
 import com.myblog.myblog.domain.PostRequestDto;
 import com.myblog.myblog.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@RequiredArgsConstructor
+
 @RestController
+@RequestMapping("/api")
+
 public class PostController {
-    private final PostRepository postRepository;
-//    private final PostService postService;
+    private PostService postService;
 
-    @PostMapping("/api/posts")
-    public Post createPost(@RequestBody PostRequestDto requestDto) {
-        Post post = new Post(requestDto);
-        return postRepository.save(post);
+    @Autowired
+    public PostController(PostService postService) {
+        this.postService = postService;
     }
 
-    @GetMapping("/api/posts")
-    public List<Post> readPost(){
-        return postRepository.findAllByOrderByModifiedAtAsc();
+    @GetMapping("/posts")
+    public List<Post> readPosts(){
+        return postService.readPosts();
     }
+
+    @PostMapping("/post")
+    public PostRequestDto createPost(@RequestBody PostRequestDto postRequestDto) {
+        return postService.createPost(postRequestDto);
+    }
+
+    @PutMapping("/post/{id}")
+    public Long updatePost(@PathVariable Long id, @RequestBody Map<String,Object> map) {
+        return postService.updatePost(id, map);
+    }
+
+    @DeleteMapping("/post/{id}")
+    public Long deletePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
+        return postService.deletePost(id,postRequestDto);
+    }
+
+
 }
+
