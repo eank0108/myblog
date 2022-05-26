@@ -42,6 +42,11 @@
 
             // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.
             function addHTML(response) {
+                var date = new Date(response['createdAt']);
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
+                var day = date.getDay() < 10 ? "0" + date.getDay() : date.getDay();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
                 let temp = `
 
                     <div class="d-flex flex-column flex-md-row justify-content-between mb-5 post post${response['id']}">
@@ -51,6 +56,7 @@
                             <p class="message">${response['message']}</p>
                         </div>
                         <div class="flex-shrink-0">
+                            <p class="time">${month}/${day} ${hour}:${minute}</p>
                             <button class="btn btn-outline-primary text-uppercase mb-1" onclick="detailPostModal(${response['id']});" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal3">Detail</button>
 
                         </div>
@@ -100,7 +106,7 @@
             function editPostModal() {
                 $("#title_m").val($(".post" + tempId + " .title").text());
                 $("#name_m").val($(".post" + tempId + " .name").text());
-                $("#message_m").val($(".post" + tempId + " .message").text());
+                $("#message_m").val($(".post" + tempId + " .message").html().replaceAll("<br>","\n"));
                 // 1. 작성 대상 메모의 name과 message 를 확인합니다.
                 // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
                 // 3. 전달할 data JSON으로 만듭니다.
@@ -111,7 +117,7 @@
                 tempId = id;
                 $("#exampleModal3Label").text($(".post" + tempId + " .title").text());
                 $("#name_m3").text($(".post" + tempId + " .name").text());
-                $("#message_m3").text($(".post" + tempId + " .message").text());
+                $("#message_m3").html($(".post" + tempId + " .message").html());
             }
             function editPost(){
                 let message = $("#message_m").val();

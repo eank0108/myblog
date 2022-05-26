@@ -49,6 +49,7 @@ public class Post extends Timestamped {
         for( String key : map.keySet() ){
             if (key == "message") {
                 message = (String) map.get(key);
+                message = message.replace("\n", "<br>");
             }
             if (key == "title") {
                 title = (String) map.get(key);
